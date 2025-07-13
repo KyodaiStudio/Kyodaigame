@@ -109,18 +109,18 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="w-20 h-20 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-6"></div>
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-sm w-full">
+          <div className="relative mb-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
             <div
-              className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-pink-500 rounded-full animate-spin mx-auto"
+              className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 border-4 border-transparent border-t-pink-500 rounded-full animate-spin mx-auto"
               style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
             ></div>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <h3 className="text-white text-xl font-bold mb-2">Memuat Game Kuis Indonesia</h3>
-            <p className="text-purple-200">Menyiapkan petualangan pengetahuanmu...</p>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/20">
+            <h3 className="text-white text-lg sm:text-xl font-bold mb-2">Memuat Game Kuis Indonesia</h3>
+            <p className="text-purple-200 text-sm sm:text-base">Menyiapkan petualangan pengetahuanmu...</p>
           </div>
         </div>
       </div>
@@ -131,50 +131,52 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-60 h-60 sm:w-80 sm:h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
+          className="absolute -bottom-40 -left-40 w-60 h-60 sm:w-80 sm:h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
           style={{ animationDelay: "1s" }}
         ></div>
         <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 sm:w-96 sm:h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"
           style={{ animationDelay: "2s" }}
         ></div>
       </div>
 
       {/* Header */}
       <header className="relative z-10 bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-2xl shadow-lg">
-                  <BookOpen className="h-8 w-8 text-white" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-16 sm:h-20">
+            <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
+              <div className="relative flex-shrink-0">
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-2 sm:p-3 rounded-xl sm:rounded-2xl shadow-lg">
+                  <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-ping"></div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent truncate">
                   Game Kuis Indonesia
                 </h1>
-                <p className="text-purple-200 text-sm">🇮🇩 Asah Pengetahuanmu Tentang Indonesia!</p>
+                <p className="text-purple-200 text-xs sm:text-sm truncate">🇮🇩 Asah Pengetahuanmu!</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-2 rounded-full shadow-lg">
-                <div className="flex items-center space-x-2">
-                  <Trophy className="h-5 w-5 text-white" />
-                  <span className="text-white font-bold">{totalScore}</span>
-                  <span className="text-yellow-100 text-sm">Poin</span>
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-2 sm:px-4 py-1 sm:py-2 rounded-full shadow-lg">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                  <span className="text-white font-bold text-sm sm:text-base">{totalScore}</span>
+                  <span className="text-yellow-100 text-xs sm:text-sm hidden sm:inline">Poin</span>
                 </div>
               </div>
               <Link href="/leaderboard">
                 <Button
                   variant="outline"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+                  size="sm"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm text-xs sm:text-sm px-2 sm:px-4"
                 >
-                  <Crown className="h-4 w-4 mr-2" />
-                  Papan Skor
+                  <Crown className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Papan Skor</span>
+                  <span className="sm:hidden">Skor</span>
                 </Button>
               </Link>
             </div>
@@ -182,15 +184,15 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
         {/* Error Alert */}
         {error && (
-          <Alert className="mb-8 bg-red-500/20 border-red-300/30 text-red-200">
+          <Alert className="mb-6 sm:mb-8 bg-red-500/20 border-red-300/30 text-red-200">
             <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
+            <AlertDescription className="text-sm sm:text-base">
               <strong>Peringatan:</strong> {error}
               <br />
-              <span className="text-sm mt-2 block">
+              <span className="text-xs sm:text-sm mt-2 block">
                 Aplikasi berjalan dalam mode offline. Beberapa fitur mungkin tidak tersedia.
               </span>
             </AlertDescription>
@@ -198,97 +200,96 @@ export default function HomePage() {
         )}
 
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-300/30 rounded-full px-6 py-2 mb-6">
-            <Zap className="h-5 w-5 text-yellow-400 mr-2" />
-            <span className="text-purple-200 text-sm font-medium">Petualangan Pengetahuan Dimulai!</span>
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-300/30 rounded-full px-3 sm:px-6 py-1 sm:py-2 mb-4 sm:mb-6">
+            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400 mr-1 sm:mr-2" />
+            <span className="text-purple-200 text-xs sm:text-sm font-medium">Petualangan Pengetahuan Dimulai!</span>
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 px-2">
+            <span className="bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent block">
               Selamat Datang di
             </span>
-            <br />
-            <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent block mt-1 sm:mt-2">
               Game Kuis Indonesia! 🎯
             </span>
           </h2>
 
-          <p className="text-xl text-purple-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-xl text-purple-200 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
             Uji pengetahuanmu melalui <span className="text-yellow-400 font-semibold">12 level menantang</span> tentang
             Indonesia. Mulai dari level mudah hingga sangat sulit. Raih poin tertinggi dan jadilah{" "}
             <span className="text-pink-400 font-semibold">Grandmaster</span>!
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href={`/game/${getNextLevel()}`}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
+            <Link href={`/game/${getNextLevel()}`} className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-2xl transform hover:scale-105 transition-all duration-300 px-8 py-4 text-lg"
+                className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-2xl transform hover:scale-105 transition-all duration-300 px-4 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
               >
-                <Play className="h-6 w-6 mr-3" />
-                Mulai Petualangan - Level {getNextLevel()}
-                <Zap className="h-5 w-5 ml-2" />
+                <Play className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
+                <span className="truncate">Mulai Petualangan - Level {getNextLevel()}</span>
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5 ml-1 sm:ml-2" />
               </Button>
             </Link>
           </div>
         </div>
 
         {/* Progress Overview */}
-        <Card className="mb-12 bg-white/10 backdrop-blur-md border-white/20 shadow-2xl">
-          <CardHeader>
-            <CardTitle className="flex items-center text-white text-2xl">
-              <Target className="h-7 w-7 mr-3 text-yellow-400" />
+        <Card className="mb-8 sm:mb-12 bg-white/10 backdrop-blur-md border-white/20 shadow-2xl">
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="flex items-center text-white text-xl sm:text-2xl">
+              <Target className="h-6 w-6 sm:h-7 sm:w-7 mr-2 sm:mr-3 text-yellow-400" />
               Progress Petualanganmu
             </CardTitle>
-            <CardDescription className="text-purple-200 text-lg">
+            <CardDescription className="text-purple-200 text-base sm:text-lg">
               Lihat seberapa jauh kamu telah menjelajahi dunia pengetahuan Indonesia
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <div className="flex justify-between text-lg mb-3">
-                  <span className="text-white font-medium">Progress Keseluruhan</span>
-                  <span className="text-purple-200">{completedLevels}/12 Level Selesai</span>
-                </div>
-                <div className="relative">
-                  <Progress value={progressPercentage} className="h-4 bg-white/20" />
-                  <div
-                    className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                    style={{ width: `${progressPercentage}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between mt-2 text-sm text-purple-300">
-                  <span>Pemula</span>
-                  <span>Grandmaster</span>
-                </div>
+          <CardContent className="space-y-4 sm:space-y-6">
+            <div>
+              <div className="flex justify-between text-base sm:text-lg mb-2 sm:mb-3">
+                <span className="text-white font-medium">Progress Keseluruhan</span>
+                <span className="text-purple-200 text-sm sm:text-base">{completedLevels}/12 Level Selesai</span>
               </div>
+              <div className="relative">
+                <Progress value={progressPercentage} className="h-3 sm:h-4 bg-white/20" />
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
+              <div className="flex justify-between mt-2 text-xs sm:text-sm text-purple-300">
+                <span>Pemula</span>
+                <span>Grandmaster</span>
+              </div>
+            </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 p-4 rounded-xl border border-blue-300/30">
-                  <div className="text-2xl font-bold text-white">{completedLevels}</div>
-                  <div className="text-blue-200 text-sm">Level Selesai</div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 p-3 sm:p-4 rounded-xl border border-blue-300/30">
+                <div className="text-xl sm:text-2xl font-bold text-white">{completedLevels}</div>
+                <div className="text-blue-200 text-xs sm:text-sm">Level Selesai</div>
+              </div>
+              <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-3 sm:p-4 rounded-xl border border-green-300/30">
+                <div className="text-xl sm:text-2xl font-bold text-white">{totalScore}</div>
+                <div className="text-green-200 text-xs sm:text-sm">Total Poin</div>
+              </div>
+              <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 p-3 sm:p-4 rounded-xl border border-yellow-300/30">
+                <div className="text-xl sm:text-2xl font-bold text-white">{Math.round(progressPercentage)}%</div>
+                <div className="text-yellow-200 text-xs sm:text-sm">Progress</div>
+              </div>
+              <div className="bg-gradient-to-br from-pink-500/20 to-red-500/20 p-3 sm:p-4 rounded-xl border border-pink-300/30">
+                <div className="text-xl sm:text-2xl font-bold text-white">
+                  {userProgress.filter((p) => p.unlocked).length}
                 </div>
-                <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-4 rounded-xl border border-green-300/30">
-                  <div className="text-2xl font-bold text-white">{totalScore}</div>
-                  <div className="text-green-200 text-sm">Total Poin</div>
-                </div>
-                <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 p-4 rounded-xl border border-yellow-300/30">
-                  <div className="text-2xl font-bold text-white">{Math.round(progressPercentage)}%</div>
-                  <div className="text-yellow-200 text-sm">Progress</div>
-                </div>
-                <div className="bg-gradient-to-br from-pink-500/20 to-red-500/20 p-4 rounded-xl border border-pink-300/30">
-                  <div className="text-2xl font-bold text-white">{userProgress.filter((p) => p.unlocked).length}</div>
-                  <div className="text-pink-200 text-sm">Level Terbuka</div>
-                </div>
+                <div className="text-pink-200 text-xs sm:text-sm">Level Terbuka</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Level Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {userProgress.map((progress) => {
             const difficulty =
               progress.level <= 3
@@ -339,25 +340,27 @@ export default function HomePage() {
                 {!progress.unlocked && (
                   <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-10">
                     <div className="text-center">
-                      <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center mb-2 mx-auto">
-                        <span className="text-white text-xl">🔒</span>
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-600 rounded-full flex items-center justify-center mb-2 mx-auto">
+                        <span className="text-white text-lg sm:text-xl">🔒</span>
                       </div>
-                      <p className="text-white text-sm font-medium">Terkunci</p>
+                      <p className="text-white text-xs sm:text-sm font-medium">Terkunci</p>
                     </div>
                   </div>
                 )}
 
-                <CardHeader className="relative z-10 pb-3">
+                <CardHeader className="relative z-10 pb-2 sm:pb-3">
                   <div className="flex justify-between items-start">
-                    <CardTitle className="text-white text-xl flex items-center">
-                      {progress.completed && <Award className="h-5 w-5 text-yellow-400 mr-2" />}
+                    <CardTitle className="text-white text-lg sm:text-xl flex items-center">
+                      {progress.completed && <Award className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400 mr-1 sm:mr-2" />}
                       Level {progress.level}
                     </CardTitle>
-                    <Badge className={`bg-gradient-to-r ${difficulty.color} text-white border-0 shadow-lg`}>
+                    <Badge
+                      className={`bg-gradient-to-r ${difficulty.color} text-white border-0 shadow-lg text-xs sm:text-sm`}
+                    >
                       {difficulty.name}
                     </Badge>
                   </div>
-                  <CardDescription className="text-purple-200">
+                  <CardDescription className="text-purple-200 text-xs sm:text-sm">
                     {questionCount} soal -{" "}
                     {difficulty.name === "Mudah"
                       ? "Tingkat dasar"
@@ -369,41 +372,39 @@ export default function HomePage() {
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="relative z-10">
-                  <div className="space-y-4">
-                    {progress.completed && (
-                      <div className="bg-green-500/20 border border-green-300/30 rounded-lg p-3">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-green-300 font-medium flex items-center">
-                            <Star className="h-4 w-4 mr-1" />
-                            Selesai
-                          </span>
-                          <span className="text-white font-bold">{progress.score} poin</span>
-                        </div>
+                <CardContent className="relative z-10 space-y-3 sm:space-y-4">
+                  {progress.completed && (
+                    <div className="bg-green-500/20 border border-green-300/30 rounded-lg p-2 sm:p-3">
+                      <div className="flex items-center justify-between text-xs sm:text-sm">
+                        <span className="text-green-300 font-medium flex items-center">
+                          <Star className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          Selesai
+                        </span>
+                        <span className="text-white font-bold">{progress.score} poin</span>
                       </div>
-                    )}
+                    </div>
+                  )}
 
-                    <Link href={progress.unlocked ? `/game/${progress.level}` : "#"}>
-                      <Button
-                        className={`w-full ${
-                          !progress.unlocked
-                            ? "bg-gray-600 cursor-not-allowed"
-                            : progress.completed
-                              ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                              : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                        } text-white shadow-lg transform transition-all duration-200 hover:scale-105`}
-                        disabled={!progress.unlocked}
-                      >
-                        {!progress.unlocked ? (
-                          <>🔒 Terkunci</>
-                        ) : progress.completed ? (
-                          <>🔄 Ulangi Level</>
-                        ) : (
-                          <>🚀 Mulai Level</>
-                        )}
-                      </Button>
-                    </Link>
-                  </div>
+                  <Link href={progress.unlocked ? `/game/${progress.level}` : "#"}>
+                    <Button
+                      className={`w-full text-xs sm:text-sm py-2 sm:py-3 ${
+                        !progress.unlocked
+                          ? "bg-gray-600 cursor-not-allowed"
+                          : progress.completed
+                            ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                            : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                      } text-white shadow-lg transform transition-all duration-200 hover:scale-105`}
+                      disabled={!progress.unlocked}
+                    >
+                      {!progress.unlocked ? (
+                        <>🔒 Terkunci</>
+                      ) : progress.completed ? (
+                        <>🔄 Ulangi Level</>
+                      ) : (
+                        <>🚀 Mulai Level</>
+                      )}
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             )
@@ -412,41 +413,41 @@ export default function HomePage() {
 
         {/* Achievement Section */}
         {completedLevels > 0 && (
-          <Card className="mt-12 bg-gradient-to-r from-purple-900/50 to-pink-900/50 backdrop-blur-md border-purple-300/30 shadow-2xl">
+          <Card className="mt-8 sm:mt-12 bg-gradient-to-r from-purple-900/50 to-pink-900/50 backdrop-blur-md border-purple-300/30 shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-white text-2xl flex items-center">
-                <Trophy className="h-7 w-7 mr-3 text-yellow-400" />
+              <CardTitle className="text-white text-xl sm:text-2xl flex items-center">
+                <Trophy className="h-6 w-6 sm:h-7 sm:w-7 mr-2 sm:mr-3 text-yellow-400" />
                 Pencapaianmu
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 {completedLevels >= 3 && (
-                  <div className="bg-green-500/20 border border-green-300/30 rounded-xl p-4 text-center">
-                    <div className="text-3xl mb-2">🌟</div>
-                    <div className="text-white font-bold">Pemula</div>
-                    <div className="text-green-200 text-sm">3 Level Selesai</div>
+                  <div className="bg-green-500/20 border border-green-300/30 rounded-xl p-3 sm:p-4 text-center">
+                    <div className="text-2xl sm:text-3xl mb-2">🌟</div>
+                    <div className="text-white font-bold text-sm sm:text-base">Pemula</div>
+                    <div className="text-green-200 text-xs sm:text-sm">3 Level Selesai</div>
                   </div>
                 )}
                 {completedLevels >= 6 && (
-                  <div className="bg-blue-500/20 border border-blue-300/30 rounded-xl p-4 text-center">
-                    <div className="text-3xl mb-2">⭐</div>
-                    <div className="text-white font-bold">Menengah</div>
-                    <div className="text-blue-200 text-sm">6 Level Selesai</div>
+                  <div className="bg-blue-500/20 border border-blue-300/30 rounded-xl p-3 sm:p-4 text-center">
+                    <div className="text-2xl sm:text-3xl mb-2">⭐</div>
+                    <div className="text-white font-bold text-sm sm:text-base">Menengah</div>
+                    <div className="text-blue-200 text-xs sm:text-sm">6 Level Selesai</div>
                   </div>
                 )}
                 {completedLevels >= 9 && (
-                  <div className="bg-purple-500/20 border border-purple-300/30 rounded-xl p-4 text-center">
-                    <div className="text-3xl mb-2">💎</div>
-                    <div className="text-white font-bold">Ahli</div>
-                    <div className="text-purple-200 text-sm">9 Level Selesai</div>
+                  <div className="bg-purple-500/20 border border-purple-300/30 rounded-xl p-3 sm:p-4 text-center">
+                    <div className="text-2xl sm:text-3xl mb-2">💎</div>
+                    <div className="text-white font-bold text-sm sm:text-base">Ahli</div>
+                    <div className="text-purple-200 text-xs sm:text-sm">9 Level Selesai</div>
                   </div>
                 )}
                 {completedLevels === 12 && (
-                  <div className="bg-yellow-500/20 border border-yellow-300/30 rounded-xl p-4 text-center">
-                    <div className="text-3xl mb-2">👑</div>
-                    <div className="text-white font-bold">Grandmaster</div>
-                    <div className="text-yellow-200 text-sm">Semua Level Selesai!</div>
+                  <div className="bg-yellow-500/20 border border-yellow-300/30 rounded-xl p-3 sm:p-4 text-center">
+                    <div className="text-2xl sm:text-3xl mb-2">👑</div>
+                    <div className="text-white font-bold text-sm sm:text-base">Grandmaster</div>
+                    <div className="text-yellow-200 text-xs sm:text-sm">Semua Level Selesai!</div>
                   </div>
                 )}
               </div>

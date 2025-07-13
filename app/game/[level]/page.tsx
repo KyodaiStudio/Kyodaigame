@@ -216,18 +216,18 @@ export default function GamePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="w-20 h-20 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-6"></div>
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-sm w-full">
+          <div className="relative mb-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
             <div
-              className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-pink-500 rounded-full animate-spin mx-auto"
+              className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 border-4 border-transparent border-t-pink-500 rounded-full animate-spin mx-auto"
               style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
             ></div>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <h3 className="text-white text-xl font-bold mb-2">Memuat Soal Level {level}</h3>
-            <p className="text-purple-200">Menyiapkan tantangan untukmu...</p>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/20">
+            <h3 className="text-white text-lg sm:text-xl font-bold mb-2">Memuat Soal Level {level}</h3>
+            <p className="text-purple-200 text-sm sm:text-base">Menyiapkan tantangan untukmu...</p>
           </div>
         </div>
       </div>
@@ -246,61 +246,61 @@ export default function GamePage() {
     const passed = percentage >= 60
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-3 sm:p-4">
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -top-40 -right-40 w-60 h-60 sm:w-80 sm:h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
           <div
-            className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
+            className="absolute -bottom-40 -left-40 w-60 h-60 sm:w-80 sm:h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
             style={{ animationDelay: "1s" }}
           ></div>
         </div>
 
         <div className="max-w-2xl mx-auto relative z-10">
           <Card className="text-center bg-white/10 backdrop-blur-md border-white/20 shadow-2xl">
-            <CardHeader>
-              <div className="mx-auto mb-6">
+            <CardHeader className="pb-4 sm:pb-6">
+              <div className="mx-auto mb-4 sm:mb-6">
                 {passed ? (
                   <div className="relative">
-                    <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="h-12 w-12 text-white" />
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12 text-white" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
-                      <Star className="h-5 w-5 text-white" />
+                    <div className="absolute -top-2 -right-2 w-6 h-6 sm:w-8 sm:h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                      <Star className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                   </div>
                 ) : (
-                  <div className="w-24 h-24 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <XCircle className="h-12 w-12 text-white" />
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <XCircle className="h-10 w-10 sm:h-12 sm:w-12 text-white" />
                   </div>
                 )}
               </div>
-              <CardTitle className="text-3xl text-white mb-2">
+              <CardTitle className="text-2xl sm:text-3xl text-white mb-2">
                 {passed ? "🎉 Luar Biasa! Level Selesai!" : "😔 Hampir Berhasil!"}
               </CardTitle>
-              <CardDescription className="text-purple-200 text-lg">
+              <CardDescription className="text-purple-200 text-base sm:text-lg">
                 Level {level} - {difficulty.name}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-8">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 p-6 rounded-xl border border-blue-300/30">
-                  <Trophy className="h-8 w-8 text-blue-400 mx-auto mb-2" />
-                  <div className="text-3xl font-bold text-white">{finalScore}</div>
-                  <div className="text-blue-200">Poin Diperoleh</div>
+            <CardContent className="space-y-6 sm:space-y-8">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 p-4 sm:p-6 rounded-xl border border-blue-300/30">
+                  <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mx-auto mb-2" />
+                  <div className="text-2xl sm:text-3xl font-bold text-white">{finalScore}</div>
+                  <div className="text-blue-200 text-sm sm:text-base">Poin Diperoleh</div>
                 </div>
-                <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-6 rounded-xl border border-green-300/30">
-                  <Target className="h-8 w-8 text-green-400 mx-auto mb-2" />
-                  <div className="text-3xl font-bold text-white">{percentage}%</div>
-                  <div className="text-green-200">Akurasi</div>
+                <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-4 sm:p-6 rounded-xl border border-green-300/30">
+                  <Target className="h-6 w-6 sm:h-8 sm:w-8 text-green-400 mx-auto mb-2" />
+                  <div className="text-2xl sm:text-3xl font-bold text-white">{percentage}%</div>
+                  <div className="text-green-200 text-sm sm:text-base">Akurasi</div>
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {passed && level < 12 && (
                   <Link href={`/game/${level + 1}`}>
-                    <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg text-lg py-3">
-                      <Zap className="h-5 w-5 mr-2" />
+                    <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg text-base sm:text-lg py-3 sm:py-4">
+                      <Zap className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                       Lanjut ke Level {level + 1}
                     </Button>
                   </Link>
@@ -308,7 +308,7 @@ export default function GamePage() {
 
                 <Button
                   variant="outline"
-                  className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+                  className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm py-3 sm:py-4"
                   onClick={handleRetryLevel}
                 >
                   <RotateCcw className="h-4 w-4 mr-2" />
@@ -316,7 +316,10 @@ export default function GamePage() {
                 </Button>
 
                 <Link href="/">
-                  <Button variant="ghost" className="w-full text-purple-200 hover:text-white hover:bg-white/10">
+                  <Button
+                    variant="ghost"
+                    className="w-full text-purple-200 hover:text-white hover:bg-white/10 py-3 sm:py-4"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Kembali ke Menu Utama
                   </Button>
@@ -330,55 +333,60 @@ export default function GamePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-3 sm:p-4">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-60 h-60 sm:w-80 sm:h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
+          className="absolute -bottom-40 -left-40 w-60 h-60 sm:w-80 sm:h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
           style={{ animationDelay: "1s" }}
         ></div>
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <Link href="/">
-            <Button variant="ghost" className="text-white hover:bg-white/10">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Kembali
+            <Button variant="ghost" className="text-white hover:bg-white/10 p-2 sm:p-3">
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Kembali</span>
             </Button>
           </Link>
 
-          <div className="flex items-center space-x-4">
-            <Badge className={`bg-gradient-to-r ${difficulty.color} text-white border-0 shadow-lg px-4 py-2`}>
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <Badge
+              className={`bg-gradient-to-r ${difficulty.color} text-white border-0 shadow-lg px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm`}
+            >
               Level {level} - {difficulty.name}
             </Badge>
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-2 rounded-full shadow-lg">
-              <Trophy className="h-5 w-5 text-white" />
-              <span className="font-bold text-white">{gameState.score} poin</span>
+            <div className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 px-2 sm:px-4 py-1 sm:py-2 rounded-full shadow-lg">
+              <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              <span className="font-bold text-white text-sm sm:text-base">{gameState.score}</span>
+              <span className="text-yellow-100 text-xs hidden sm:inline">poin</span>
             </div>
           </div>
         </div>
 
         {/* Progress */}
-        <Card className="mb-8 bg-white/10 backdrop-blur-md border-white/20 shadow-xl">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-white font-medium text-lg">
+        <Card className="mb-6 sm:mb-8 bg-white/10 backdrop-blur-md border-white/20 shadow-xl">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex justify-between items-center mb-3 sm:mb-4">
+              <span className="text-white font-medium text-sm sm:text-lg">
                 Pertanyaan {gameState.currentQuestion + 1} dari {questions.length}
               </span>
-              <div className="flex items-center space-x-3">
-                <Clock className={`h-6 w-6 ${gameState.timeLeft <= 10 ? "text-red-400" : "text-blue-400"}`} />
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <Clock
+                  className={`h-5 w-5 sm:h-6 sm:w-6 ${gameState.timeLeft <= 10 ? "text-red-400" : "text-blue-400"}`}
+                />
                 <span
-                  className={`font-bold text-2xl ${gameState.timeLeft <= 10 ? "text-red-400 animate-pulse" : "text-white"}`}
+                  className={`font-bold text-lg sm:text-2xl ${gameState.timeLeft <= 10 ? "text-red-400 animate-pulse" : "text-white"}`}
                 >
                   {gameState.timeLeft}s
                 </span>
               </div>
             </div>
             <div className="relative">
-              <Progress value={progress} className="h-3 bg-white/20" />
+              <Progress value={progress} className="h-2 sm:h-3 bg-white/20" />
               <div
                 className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
@@ -389,30 +397,35 @@ export default function GamePage() {
 
         {/* Question */}
         <Card className="bg-white/10 backdrop-blur-md border-white/20 shadow-2xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-white leading-relaxed">{currentQ?.question}</CardTitle>
+          <CardHeader className="pb-4 sm:pb-6">
+            <CardTitle className="text-lg sm:text-2xl text-white leading-relaxed">{currentQ?.question}</CardTitle>
           </CardHeader>
           <CardContent>
             {!showResult ? (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <RadioGroup
                   value={selectedAnswer?.toString()}
                   onValueChange={(value) => setSelectedAnswer(Number.parseInt(value))}
-                  className="space-y-4"
+                  className="space-y-3 sm:space-y-4"
                 >
                   {currentQ?.options.map((option, index) => (
                     <div
                       key={index}
-                      className="flex items-center space-x-4 p-4 border border-white/30 rounded-xl hover:bg-white/10 cursor-pointer transition-all duration-200 hover:scale-[1.02]"
+                      className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 border border-white/30 rounded-xl hover:bg-white/10 cursor-pointer transition-all duration-200 hover:scale-[1.02]"
                       onClick={() => setSelectedAnswer(index)}
                     >
                       <RadioGroupItem
                         value={index.toString()}
                         id={`option-${index}`}
-                        className="border-white/50 text-purple-400"
+                        className="border-white/50 text-purple-400 flex-shrink-0"
                       />
-                      <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer text-white text-lg">
-                        <span className="font-medium text-purple-300 mr-3">{String.fromCharCode(65 + index)}.</span>
+                      <Label
+                        htmlFor={`option-${index}`}
+                        className="flex-1 cursor-pointer text-white text-sm sm:text-lg leading-relaxed"
+                      >
+                        <span className="font-medium text-purple-300 mr-2 sm:mr-3">
+                          {String.fromCharCode(65 + index)}.
+                        </span>
                         {option}
                       </Label>
                     </div>
@@ -422,32 +435,34 @@ export default function GamePage() {
                 <Button
                   onClick={handleAnswerSubmit}
                   disabled={selectedAnswer === null}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg text-lg py-4"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg text-base sm:text-lg py-3 sm:py-4"
                 >
-                  <Zap className="h-5 w-5 mr-2" />
+                  <Zap className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   Jawab Pertanyaan
                 </Button>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div
-                  className={`p-6 rounded-xl border ${
+                  className={`p-4 sm:p-6 rounded-xl border ${
                     gameState.isCorrect ? "bg-green-500/20 border-green-300/30" : "bg-red-500/20 border-red-300/30"
                   }`}
                 >
-                  <div className="flex items-center space-x-3 mb-4">
+                  <div className="flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
                     {gameState.isCorrect ? (
-                      <CheckCircle className="h-8 w-8 text-green-400" />
+                      <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-green-400" />
                     ) : (
-                      <XCircle className="h-8 w-8 text-red-400" />
+                      <XCircle className="h-6 w-6 sm:h-8 sm:w-8 text-red-400" />
                     )}
-                    <span className={`font-bold text-xl ${gameState.isCorrect ? "text-green-300" : "text-red-300"}`}>
+                    <span
+                      className={`font-bold text-lg sm:text-xl ${gameState.isCorrect ? "text-green-300" : "text-red-300"}`}
+                    >
                       {gameState.isCorrect ? "🎉 Jawaban Benar! (+10 poin)" : "❌ Jawaban Salah!"}
                     </span>
                   </div>
 
                   {!gameState.isCorrect && (
-                    <p className="text-white mb-3">
+                    <p className="text-white mb-3 text-sm sm:text-base">
                       <strong>Jawaban yang benar:</strong>
                       <span className="text-green-300 ml-2 font-medium">
                         {String.fromCharCode(65 + currentQ?.correct_answer)} -{" "}
@@ -457,8 +472,8 @@ export default function GamePage() {
                   )}
 
                   {currentQ?.explanation && (
-                    <div className="bg-white/10 p-4 rounded-lg mt-4">
-                      <p className="text-white">
+                    <div className="bg-white/10 p-3 sm:p-4 rounded-lg mt-3 sm:mt-4">
+                      <p className="text-white text-sm sm:text-base">
                         <strong className="text-blue-300">💡 Penjelasan:</strong>
                         <span className="ml-2">{currentQ.explanation}</span>
                       </p>
@@ -468,16 +483,16 @@ export default function GamePage() {
 
                 <Button
                   onClick={handleNextQuestion}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg text-lg py-4"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg text-base sm:text-lg py-3 sm:py-4"
                 >
                   {gameState.currentQuestion + 1 >= questions.length ? (
                     <>
-                      <Trophy className="h-5 w-5 mr-2" />
+                      <Trophy className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                       Selesaikan Level
                     </>
                   ) : (
                     <>
-                      <ArrowLeft className="h-5 w-5 mr-2 rotate-180" />
+                      <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 mr-2 rotate-180" />
                       Pertanyaan Berikutnya
                     </>
                   )}

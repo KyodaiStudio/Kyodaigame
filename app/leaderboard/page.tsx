@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Trophy, Medal, Award, Users, TrendingUp, Star, ArrowLeft, Crown, Zap } from 'lucide-react'
+import { Trophy, Medal, Award, Users, TrendingUp, Star, ArrowLeft, Crown, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -44,15 +44,15 @@ export default function LeaderboardPage() {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Trophy className="h-8 w-8 text-yellow-400" />
+        return <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400" />
       case 2:
-        return <Medal className="h-8 w-8 text-gray-300" />
+        return <Medal className="h-6 w-6 sm:h-8 sm:w-8 text-gray-300" />
       case 3:
-        return <Award className="h-8 w-8 text-amber-600" />
+        return <Award className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600" />
       default:
         return (
-          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-sm">#{rank}</span>
+          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <span className="text-white font-bold text-xs sm:text-sm">#{rank}</span>
           </div>
         )
     }
@@ -61,30 +61,46 @@ export default function LeaderboardPage() {
   const getRankBadge = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">🥇 Juara 1</Badge>
+        return (
+          <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 text-xs sm:text-sm">
+            🥇 Juara 1
+          </Badge>
+        )
       case 2:
-        return <Badge className="bg-gradient-to-r from-gray-400 to-gray-500 text-white border-0">🥈 Juara 2</Badge>
+        return (
+          <Badge className="bg-gradient-to-r from-gray-400 to-gray-500 text-white border-0 text-xs sm:text-sm">
+            🥈 Juara 2
+          </Badge>
+        )
       case 3:
-        return <Badge className="bg-gradient-to-r from-amber-600 to-amber-700 text-white border-0">🥉 Juara 3</Badge>
+        return (
+          <Badge className="bg-gradient-to-r from-amber-600 to-amber-700 text-white border-0 text-xs sm:text-sm">
+            🥉 Juara 3
+          </Badge>
+        )
       default:
-        return <Badge variant="outline" className="border-purple-300 text-purple-300">Peringkat {rank}</Badge>
+        return (
+          <Badge variant="outline" className="border-purple-300 text-purple-300 text-xs sm:text-sm">
+            Peringkat {rank}
+          </Badge>
+        )
     }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="w-20 h-20 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-6"></div>
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-sm w-full">
+          <div className="relative mb-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
             <div
-              className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-pink-500 rounded-full animate-spin mx-auto"
+              className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 border-4 border-transparent border-t-pink-500 rounded-full animate-spin mx-auto"
               style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
             ></div>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <h3 className="text-white text-xl font-bold mb-2">Memuat Papan Skor</h3>
-            <p className="text-purple-200">Mengambil data peringkat pemain...</p>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/20">
+            <h3 className="text-white text-lg sm:text-xl font-bold mb-2">Memuat Papan Skor</h3>
+            <p className="text-purple-200 text-sm sm:text-base">Mengambil data peringkat pemain...</p>
           </div>
         </div>
       </div>
@@ -95,37 +111,38 @@ export default function LeaderboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-60 h-60 sm:w-80 sm:h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
+          className="absolute -bottom-40 -left-40 w-60 h-60 sm:w-80 sm:h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
           style={{ animationDelay: "1s" }}
         ></div>
       </div>
 
       {/* Header */}
       <header className="relative z-10 bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-2xl shadow-lg">
-                  <Crown className="h-8 w-8 text-white" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-16 sm:h-20">
+            <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
+              <div className="relative flex-shrink-0">
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-2 sm:p-3 rounded-xl sm:rounded-2xl shadow-lg">
+                  <Crown className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-ping"></div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
                   Papan Skor
                 </h1>
-                <p className="text-purple-200">🏆 Lihat peringkat pemain terbaik Indonesia!</p>
+                <p className="text-purple-200 text-xs sm:text-sm">🏆 Lihat peringkat pemain terbaik!</p>
               </div>
             </div>
             <Link href="/">
               <Button
                 variant="outline"
-                className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+                size="sm"
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm text-xs sm:text-sm px-2 sm:px-4"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
+                <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                 Kembali
               </Button>
             </Link>
@@ -133,13 +150,13 @@ export default function LeaderboardPage() {
         </div>
       </header>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
         {leaderboard.length === 0 ? (
           <Card className="text-center bg-white/10 backdrop-blur-md border-white/20 shadow-2xl">
-            <CardContent className="p-12">
-              <Trophy className="h-20 w-20 text-yellow-400 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-white mb-4">Belum Ada Pemain</h3>
-              <p className="text-purple-200 text-lg mb-6">
+            <CardContent className="p-8 sm:p-12">
+              <Trophy className="h-16 w-16 sm:h-20 sm:w-20 text-yellow-400 mx-auto mb-4 sm:mb-6" />
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Belum Ada Pemain</h3>
+              <p className="text-purple-200 text-base sm:text-lg mb-4 sm:mb-6">
                 Jadilah yang pertama bermain dan raih posisi teratas di papan skor!
               </p>
               <Link href="/">
@@ -153,14 +170,14 @@ export default function LeaderboardPage() {
         ) : (
           <>
             {/* Top 3 Podium */}
-            <div className="mb-12">
-              <h2 className="text-3xl font-bold text-center mb-8">
+            <div className="mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">
                 <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
                   🏆 Hall of Fame 🏆
                 </span>
               </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 max-w-5xl mx-auto">
                 {leaderboard.slice(0, 3).map((entry, index) => {
                   const rank = index + 1
                   const isFirst = rank === 1
@@ -168,31 +185,45 @@ export default function LeaderboardPage() {
                   return (
                     <Card
                       key={entry.id}
-                      className={`text-center bg-white/10 backdrop-blur-md border-white/20 shadow-2xl transform transition-all duration-300 hover:scale-105 ${
-                        isFirst ? "ring-4 ring-yellow-400 scale-110" : ""
-                      }`}
+                      className={`relative overflow-hidden transition-all duration-300 hover:scale-105 ${
+                        isFirst
+                          ? "md:order-2 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-300/30 shadow-yellow-400/25 shadow-2xl"
+                          : rank === 2
+                            ? "md:order-1 bg-gradient-to-br from-gray-400/20 to-gray-500/20 border-gray-300/30"
+                            : "md:order-3 bg-gradient-to-br from-amber-600/20 to-amber-700/20 border-amber-300/30"
+                      } backdrop-blur-md`}
                     >
-                      <CardHeader className="pb-4">
-                        <div className="flex justify-center mb-4">{getRankIcon(rank)}</div>
-                        <CardTitle className={`text-xl ${isFirst ? "text-yellow-400" : "text-white"}`}>
-                          {entry.username}
-                        </CardTitle>
-                        <CardDescription className="text-center">{getRankBadge(rank)}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 p-4 rounded-xl border border-blue-300/30">
-                            <div className="text-2xl font-bold text-blue-300">{entry.totalScore}</div>
-                            <div className="text-blue-200">Total Poin</div>
-                          </div>
-                          <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-4 rounded-xl border border-green-300/30">
-                            <div className="text-2xl font-bold text-green-300">{entry.levelsCompleted}</div>
-                            <div className="text-green-200">Level Selesai</div>
+                      {/* Crown for first place */}
+                      {isFirst && (
+                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-2 rounded-full shadow-lg">
+                            <Crown className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                           </div>
                         </div>
-                        <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-4 rounded-xl border border-purple-300/30">
-                          <div className="text-2xl font-bold text-purple-300">{entry.averageScore.toFixed(1)}%</div>
-                          <div className="text-purple-200">Rata-rata Skor</div>
+                      )}
+
+                      <CardHeader className="text-center pb-3 sm:pb-4 pt-6 sm:pt-8">
+                        <div className="flex justify-center mb-3 sm:mb-4">{getRankIcon(rank)}</div>
+                        <CardTitle className="text-white text-lg sm:text-xl truncate">{entry.username}</CardTitle>
+                        <div className="flex justify-center">{getRankBadge(rank)}</div>
+                      </CardHeader>
+
+                      <CardContent className="text-center space-y-3 sm:space-y-4">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          <div className="bg-white/10 p-2 sm:p-3 rounded-lg">
+                            <div className="text-lg sm:text-xl font-bold text-white">{entry.totalScore}</div>
+                            <div className="text-xs sm:text-sm text-purple-200">Total Poin</div>
+                          </div>
+                          <div className="bg-white/10 p-2 sm:p-3 rounded-lg">
+                            <div className="text-lg sm:text-xl font-bold text-white">{entry.levelsCompleted}</div>
+                            <div className="text-xs sm:text-sm text-purple-200">Level Selesai</div>
+                          </div>
+                        </div>
+                        <div className="bg-white/10 p-2 sm:p-3 rounded-lg">
+                          <div className="text-base sm:text-lg font-bold text-white">
+                            {entry.averageScore.toFixed(1)}
+                          </div>
+                          <div className="text-xs sm:text-sm text-purple-200">Rata-rata Skor</div>
                         </div>
                       </CardContent>
                     </Card>
@@ -201,76 +232,101 @@ export default function LeaderboardPage() {
               </div>
             </div>
 
-            {/* Full Leaderboard */}
+            {/* Full Leaderboard Table */}
             <Card className="bg-white/10 backdrop-blur-md border-white/20 shadow-2xl">
               <CardHeader>
-                <CardTitle className="flex items-center text-white text-2xl">
-                  <Users className="h-7 w-7 mr-3 text-purple-400" />
-                  Papan Skor Lengkap
+                <CardTitle className="flex items-center text-white text-xl sm:text-2xl">
+                  <Users className="h-6 w-6 sm:h-7 sm:w-7 mr-2 sm:mr-3 text-blue-400" />
+                  Peringkat Lengkap
                 </CardTitle>
-                <CardDescription className="text-purple-200 text-lg">
-                  Peringkat semua pemain berdasarkan total poin dan pencapaian
+                <CardDescription className="text-purple-200 text-base sm:text-lg">
+                  Semua pemain yang telah berpartisipasi dalam Game Kuis Indonesia
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="border-white/20">
-                        <TableHead className="text-purple-200 text-center">Rank</TableHead>
-                        <TableHead className="text-purple-200">Nama Pemain</TableHead>
-                        <TableHead className="text-purple-200 text-center">Total Poin</TableHead>
-                        <TableHead className="text-purple-200 text-center">Level Selesai</TableHead>
-                        <TableHead className="text-purple-200 text-center">Rata-rata Skor</TableHead>
-                        <TableHead className="text-purple-200 text-center">Terakhir Main</TableHead>
+                      <TableRow className="border-white/20 hover:bg-white/5">
+                        <TableHead className="text-purple-200 font-semibold text-sm sm:text-base">Peringkat</TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-sm sm:text-base">Pemain</TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-center text-sm sm:text-base">
+                          Total Poin
+                        </TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-center text-sm sm:text-base">
+                          Level Selesai
+                        </TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-center text-sm sm:text-base">
+                          Rata-rata
+                        </TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-center text-sm sm:text-base hidden sm:table-cell">
+                          Terakhir Main
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {leaderboard.map((entry, index) => {
                         const rank = index + 1
-
                         return (
                           <TableRow
                             key={entry.id}
-                            className={`border-white/10 transition-colors hover:bg-white/5 ${
-                              rank <= 3 ? "bg-gradient-to-r from-yellow-500/10 to-orange-500/10" : ""
+                            className={`border-white/10 hover:bg-white/5 transition-colors ${
+                              rank <= 3 ? "bg-white/5" : ""
                             }`}
                           >
-                            <TableCell className="text-center">
-                              <div className="flex items-center justify-center">{getRankIcon(rank)}</div>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center space-x-2 sm:space-x-3">
+                                {getRankIcon(rank)}
+                                <span className="text-white text-sm sm:text-base">#{rank}</span>
+                              </div>
                             </TableCell>
                             <TableCell>
-                              <div className="flex flex-col">
-                                <div className="font-medium text-white text-lg">{entry.username}</div>
-                                {rank <= 3 && <div className="mt-1">{getRankBadge(rank)}</div>}
+                              <div className="flex items-center space-x-2 sm:space-x-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <span className="text-white font-bold text-xs sm:text-sm">
+                                    {entry.username.charAt(0).toUpperCase()}
+                                  </span>
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="text-white font-medium text-sm sm:text-base truncate">
+                                    {entry.username}
+                                  </div>
+                                  {rank <= 3 && (
+                                    <div className="flex items-center space-x-1 mt-1">
+                                      <Star className="h-3 w-3 text-yellow-400" />
+                                      <span className="text-yellow-300 text-xs">Top Player</span>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </TableCell>
                             <TableCell className="text-center">
-                              <div className="flex items-center justify-center space-x-2">
-                                <Star className="h-5 w-5 text-yellow-400" />
-                                <span className="font-bold text-white text-lg">{entry.totalScore}</span>
+                              <div className="flex items-center justify-center space-x-1 sm:space-x-2">
+                                <TrendingUp className="h-4 w-4 text-green-400" />
+                                <span className="text-white font-bold text-sm sm:text-base">{entry.totalScore}</span>
                               </div>
                             </TableCell>
                             <TableCell className="text-center">
                               <Badge
                                 variant="outline"
-                                className="border-purple-300 text-purple-300 bg-purple-500/20"
+                                className="border-blue-300 text-blue-300 bg-blue-500/10 text-xs sm:text-sm"
                               >
                                 {entry.levelsCompleted}/12
                               </Badge>
                             </TableCell>
                             <TableCell className="text-center">
-                              <div className="flex items-center justify-center space-x-2">
-                                <TrendingUp className="h-4 w-4 text-green-400" />
-                                <span className="text-white">{entry.averageScore.toFixed(1)}%</span>
-                              </div>
+                              <span className="text-purple-200 font-medium text-sm sm:text-base">
+                                {entry.averageScore.toFixed(1)}
+                              </span>
                             </TableCell>
-                            <TableCell className="text-center text-sm text-purple-300">
-                              {new Date(entry.lastPlayed).toLocaleDateString("id-ID", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}
+                            <TableCell className="text-center hidden sm:table-cell">
+                              <span className="text-purple-300 text-xs sm:text-sm">
+                                {new Date(entry.lastPlayed).toLocaleDateString("id-ID", {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                })}
+                              </span>
                             </TableCell>
                           </TableRow>
                         )
@@ -280,50 +336,6 @@ export default function LeaderboardPage() {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
-              <Card className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-300/30 shadow-xl">
-                <CardContent className="p-8 text-center">
-                  <Users className="h-10 w-10 text-blue-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-white">{leaderboard.length}</div>
-                  <div className="text-blue-200">Total Pemain</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-300/30 shadow-xl">
-                <CardContent className="p-8 text-center">
-                  <Trophy className="h-10 w-10 text-yellow-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-white">
-                    {leaderboard.length > 0 ? Math.max(...leaderboard.map((l) => l.totalScore)) : 0}
-                  </div>
-                  <div className="text-yellow-200">Skor Tertinggi</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-300/30 shadow-xl">
-                <CardContent className="p-8 text-center">
-                  <Star className="h-10 w-10 text-purple-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-white">
-                    {leaderboard.length > 0
-                      ? Math.round(leaderboard.reduce((sum, l) => sum + l.averageScore, 0) / leaderboard.length)
-                      : 0}
-                    %
-                  </div>
-                  <div className="text-purple-200">Rata-rata Global</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border-green-300/30 shadow-xl">
-                <CardContent className="p-8 text-center">
-                  <Crown className="h-10 w-10 text-green-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-white">
-                    {leaderboard.filter((l) => l.levelsCompleted === 12).length}
-                  </div>
-                  <div className="text-green-200">Grandmaster</div>
-                </CardContent>
-              </Card>
-            </div>
           </>
         )}
       </main>

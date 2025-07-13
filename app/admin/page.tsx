@@ -1,41 +1,34 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import {
+  Settings,
   Plus,
   Edit,
   Trash2,
   Save,
-  Eye,
+  X,
   Users,
   BookOpen,
   BarChart3,
-  ArrowLeft,
   Shield,
+  AlertTriangle,
+  CheckCircle,
   LogOut,
-  RefreshCw,
 } from "lucide-react"
-import Link from "next/link"
 
 interface Question {
   id: string
@@ -47,27 +40,24 @@ interface Question {
   created_at: string
 }
 
-interface QuestionForm {
-  question: string
-  options: string[]
-  correct_answer: number
-  level: number
-  explanation: string
+interface AdminStats {
+  totalQuestions: number
+  totalUsers: number
+  questionsPerLevel: { [key: number]: number }
 }
 
 export default function AdminPage() {
-  const [questions, setQuestions] = useState<Question[]>([])
-  const [selectedLevel, setSelectedLevel] = useState<number>(1)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [stats, setStats] = useState<AdminStats>({ totalQuestions: 0, totalUsers: 0, questionsPerLevel: {} })
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null)
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
-  const [questionForm, setQuestionForm] = useState<QuestionForm>({
+  // Form state
+  const [formData, setFormData] = useState({
     question: "",
     options: ["", "", "", ""],
     correct_answer: 0,
@@ -79,137 +69,68 @@ export default function AdminPage() {
     checkAuth()
   }, [])
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadQuestions()
-    }
-  }, [isAuthenticated])
-
   const checkAuth = async () => {
-    const token = localStorage.getItem("adminToken")
-    if (!token) {
-      router.push("/admin/login")
-      return
-    }
-
     try {
       const response = await fetch("/api/admin/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
+        credentials: "include",
       })
 
       if (response.ok) {
         setIsAuthenticated(true)
-        setLoading(false)
+        await loadData()
       } else {
-        localStorage.removeItem("adminToken")
         router.push("/admin/login")
       }
     } catch (error) {
-      console.error("Auth check error:", error)
-      localStorage.removeItem("adminToken")
+      console.error("Auth check failed:", error)
       router.push("/admin/login")
-    }
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-    router.push("/admin/login")
-  }
-
-  const loadQuestions = async () => {
-    try {
-      setError("")
-      const response = await fetch("/api/questions")
-      if (response.ok) {
-        const data = await response.json()
-        setQuestions(data.questions || [])
-      } else {
-        const errorData = await response.json()
-        setError(errorData.error || "Gagal memuat soal")
-      }
-    } catch (error) {
-      console.error("Error loading questions:", error)
-      setError("Terjadi kesalahan saat memuat soal")
-    }
-  }
-
-  const handleSaveQuestion = async () => {
-    setSaving(true)
-    setError("")
-    setSuccess("")
-
-    try {
-      const method = editingQuestion ? "PUT" : "POST"
-      const url = editingQuestion ? `/api/questions/${editingQuestion.id}` : "/api/questions"
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(questionForm),
-      })
-
-      if (response.ok) {
-        setSuccess(editingQuestion ? "Soal berhasil diperbarui!" : "Soal berhasil ditambahkan!")
-        await loadQuestions()
-        resetForm()
-        setIsDialogOpen(false)
-
-        // Clear success message after 3 seconds
-        setTimeout(() => setSuccess(""), 3000)
-      } else {
-        const data = await response.json()
-        setError(data.error || "Gagal menyimpan soal")
-      }
-    } catch (error) {
-      console.error("Error saving question:", error)
-      setError("Terjadi kesalahan saat menyimpan soal")
     } finally {
-      setSaving(false)
+      setLoading(false)
     }
   }
 
-  const handleEditQuestion = (question: Question) => {
-    setEditingQuestion(question)
-    setQuestionForm({
-      question: question.question,
-      options: question.options,
-      correct_answer: question.correct_answer,
-      level: question.level,
-      explanation: question.explanation || "",
-    })
-    setIsDialogOpen(true)
-  }
-
-  const handleDeleteQuestion = async (id: string) => {
-    if (!confirm("Apakah Anda yakin ingin menghapus soal ini?")) return
-
+  const loadData = async () => {
     try {
-      const response = await fetch(`/api/questions/${id}`, {
-        method: "DELETE",
-      })
+      // Load questions
+      const questionsResponse = await fetch("/api/questions")
+      if (questionsResponse.ok) {
+        const questionsData = await questionsResponse.json()
+        setQuestions(questionsData.questions || [])
 
-      if (response.ok) {
-        setSuccess("Soal berhasil dihapus!")
-        await loadQuestions()
-        setTimeout(() => setSuccess(""), 3000)
-      } else {
-        const data = await response.json()
-        setError(data.error || "Gagal menghapus soal")
+        // Calculate stats
+        const questionsPerLevel: { [key: number]: number } = {}
+        questionsData.questions?.forEach((q: Question) => {
+          questionsPerLevel[q.level] = (questionsPerLevel[q.level] || 0) + 1
+        })
+
+        setStats({
+          totalQuestions: questionsData.questions?.length || 0,
+          totalUsers: 0, // This would come from a separate API
+          questionsPerLevel,
+        })
       }
     } catch (error) {
-      console.error("Error deleting question:", error)
-      setError("Terjadi kesalahan saat menghapus soal")
+      console.error("Error loading data:", error)
+      showMessage("error", "Gagal memuat data")
+    }
+  }
+
+  const showMessage = (type: "success" | "error", text: string) => {
+    setMessage({ type, text })
+    setTimeout(() => setMessage(null), 5000)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" })
+      router.push("/admin/login")
+    } catch (error) {
+      console.error("Logout failed:", error)
     }
   }
 
   const resetForm = () => {
-    setQuestionForm({
+    setFormData({
       question: "",
       options: ["", "", "", ""],
       correct_answer: 0,
@@ -217,26 +138,92 @@ export default function AdminPage() {
       explanation: "",
     })
     setEditingQuestion(null)
+    setShowAddForm(false)
   }
 
-  const updateOption = (index: number, value: string) => {
-    const newOptions = [...questionForm.options]
-    newOptions[index] = value
-    setQuestionForm({ ...questionForm, options: newOptions })
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // Validation
+    if (!formData.question.trim()) {
+      showMessage("error", "Pertanyaan tidak boleh kosong")
+      return
+    }
+
+    if (formData.options.some((opt) => !opt.trim())) {
+      showMessage("error", "Semua opsi jawaban harus diisi")
+      return
+    }
+
+    try {
+      const url = editingQuestion ? `/api/questions/${editingQuestion.id}` : "/api/questions"
+      const method = editingQuestion ? "PUT" : "POST"
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (response.ok) {
+        showMessage("success", editingQuestion ? "Pertanyaan berhasil diperbarui" : "Pertanyaan berhasil ditambahkan")
+        resetForm()
+        await loadData()
+      } else {
+        const error = await response.json()
+        showMessage("error", error.error || "Terjadi kesalahan")
+      }
+    } catch (error) {
+      console.error("Error saving question:", error)
+      showMessage("error", "Terjadi kesalahan saat menyimpan")
+    }
   }
 
-  const filteredQuestions = questions.filter((q) => q.level === selectedLevel)
-  const questionsByLevel = Array.from({ length: 12 }, (_, i) => ({
-    level: i + 1,
-    count: questions.filter((q) => q.level === i + 1).length,
-  }))
+  const handleEdit = (question: Question) => {
+    setFormData({
+      question: question.question,
+      options: question.options,
+      correct_answer: question.correct_answer,
+      level: question.level,
+      explanation: question.explanation || "",
+    })
+    setEditingQuestion(question)
+    setShowAddForm(true)
+  }
+
+  const handleDelete = async (questionId: string) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus pertanyaan ini?")) return
+
+    try {
+      const response = await fetch(`/api/questions/${questionId}`, {
+        method: "DELETE",
+      })
+
+      if (response.ok) {
+        showMessage("success", "Pertanyaan berhasil dihapus")
+        await loadData()
+      } else {
+        showMessage("error", "Gagal menghapus pertanyaan")
+      }
+    } catch (error) {
+      console.error("Error deleting question:", error)
+      showMessage("error", "Terjadi kesalahan saat menghapus")
+    }
+  }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white">Memuat dashboard admin...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-sm w-full">
+          <div className="relative mb-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/20">
+            <h3 className="text-white text-lg sm:text-xl font-bold mb-2">Memuat Panel Admin</h3>
+            <p className="text-purple-200 text-sm sm:text-base">Memeriksa otentikasi...</p>
+          </div>
         </div>
       </div>
     )
@@ -250,467 +237,339 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl shadow-lg">
-                <Shield className="h-8 w-8 text-white" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-16 sm:h-20">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-2 sm:p-3 rounded-xl shadow-lg">
+                <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
-                <p className="text-purple-200">Kelola soal dan level permainan</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-white">Panel Admin</h1>
+                <p className="text-purple-200 text-xs sm:text-sm">Game Kuis Indonesia</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                className="bg-white/10 border-white/30 text-white hover:bg-white/20"
-                onClick={loadQuestions}
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh Data
-              </Button>
-              <Link href="/">
-                <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Kembali ke Game
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                className="bg-red-500/20 border-red-300/30 text-red-200 hover:bg-red-500/30"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm text-xs sm:text-sm px-2 sm:px-4"
+            >
+              <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Keluar
+            </Button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Alerts */}
-        {error && (
-          <Alert className="mb-6 bg-red-500/20 border-red-300/30 text-red-200">
-            <AlertDescription>{error}</AlertDescription>
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
+        {/* Message Alert */}
+        {message && (
+          <Alert
+            className={`mb-6 ${message.type === "success" ? "bg-green-500/20 border-green-300/30" : "bg-red-500/20 border-red-300/30"}`}
+          >
+            {message.type === "success" ? <CheckCircle className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+            <AlertDescription className={message.type === "success" ? "text-green-200" : "text-red-200"}>
+              {message.text}
+            </AlertDescription>
           </Alert>
         )}
 
-        {success && (
-          <Alert className="mb-6 bg-green-500/20 border-green-300/30 text-green-200">
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        )}
-
-        <Tabs defaultValue="questions" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white/10 border-white/20">
-            <TabsTrigger value="questions" className="text-white data-[state=active]:bg-purple-600">
-              Kelola Soal
+        <Tabs defaultValue="dashboard" className="space-y-6 sm:space-y-8">
+          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-md border border-white/20">
+            <TabsTrigger value="dashboard" className="data-[state=active]:bg-white/20 text-white text-xs sm:text-sm">
+              <BarChart3 className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Dashboard</span>
+              <span className="sm:hidden">Stats</span>
             </TabsTrigger>
-            <TabsTrigger value="levels" className="text-white data-[state=active]:bg-purple-600">
-              Level Overview
+            <TabsTrigger value="questions" className="data-[state=active]:bg-white/20 text-white text-xs sm:text-sm">
+              <BookOpen className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Pertanyaan</span>
+              <span className="sm:hidden">Soal</span>
             </TabsTrigger>
-            <TabsTrigger value="stats" className="text-white data-[state=active]:bg-purple-600">
-              Statistik
+            <TabsTrigger value="users" className="data-[state=active]:bg-white/20 text-white text-xs sm:text-sm">
+              <Users className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Pengguna</span>
+              <span className="sm:hidden">User</span>
             </TabsTrigger>
           </TabsList>
 
-          {/* Kelola Soal */}
-          <TabsContent value="questions" className="space-y-6">
-            <div className="flex justify-between items-center">
+          {/* Dashboard Tab */}
+          <TabsContent value="dashboard" className="space-y-6 sm:space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <Card className="bg-white/10 backdrop-blur-md border-white/20">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white flex items-center text-base sm:text-lg">
+                    <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-blue-400" />
+                    Total Pertanyaan
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl sm:text-3xl font-bold text-white">{stats.totalQuestions}</div>
+                  <p className="text-purple-200 text-xs sm:text-sm">Soal tersedia</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/10 backdrop-blur-md border-white/20">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white flex items-center text-base sm:text-lg">
+                    <Users className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-green-400" />
+                    Total Pengguna
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl sm:text-3xl font-bold text-white">{stats.totalUsers}</div>
+                  <p className="text-purple-200 text-xs sm:text-sm">Pemain terdaftar</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 sm:col-span-2 lg:col-span-1">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white flex items-center text-base sm:text-lg">
+                    <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-purple-400" />
+                    Distribusi Level
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {Object.entries(stats.questionsPerLevel).map(([level, count]) => (
+                      <div key={level} className="flex justify-between items-center text-sm">
+                        <span className="text-purple-200">Level {level}</span>
+                        <Badge variant="outline" className="border-purple-300 text-purple-300 text-xs">
+                          {count} soal
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Questions Tab */}
+          <TabsContent value="questions" className="space-y-6 sm:space-y-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h2 className="text-3xl font-bold text-white">Kelola Soal</h2>
-                <p className="text-purple-200 text-lg">Tambah, edit, atau hapus soal untuk setiap level</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-white">Manajemen Pertanyaan</h2>
+                <p className="text-purple-200 text-sm sm:text-base">Kelola soal-soal kuis</p>
               </div>
+              <Button
+                onClick={() => setShowAddForm(true)}
+                className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Tambah Pertanyaan
+              </Button>
+            </div>
 
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    onClick={resetForm}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Tambah Soal
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700">
-                  <DialogHeader>
-                    <DialogTitle className="text-white text-xl">
-                      {editingQuestion ? "Edit Soal" : "Tambah Soal Baru"}
-                    </DialogTitle>
-                    <DialogDescription className="text-slate-300">
-                      Isi form di bawah untuk {editingQuestion ? "mengubah" : "menambahkan"} soal
-                    </DialogDescription>
-                  </DialogHeader>
+            {/* Add/Edit Form */}
+            {showAddForm && (
+              <Card className="bg-white/10 backdrop-blur-md border-white/20">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
+                    <Settings className="h-5 w-5 sm:h-6 sm:w-6 mr-2" />
+                    {editingQuestion ? "Edit Pertanyaan" : "Tambah Pertanyaan Baru"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                      <div className="lg:col-span-2">
+                        <Label htmlFor="question" className="text-white text-sm sm:text-base">
+                          Pertanyaan
+                        </Label>
+                        <Textarea
+                          id="question"
+                          value={formData.question}
+                          onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+                          className="bg-white/10 border-white/30 text-white placeholder-purple-300 text-sm sm:text-base"
+                          placeholder="Masukkan pertanyaan..."
+                          rows={3}
+                        />
+                      </div>
 
-                  <div className="space-y-6">
-                    <div>
-                      <Label htmlFor="level" className="text-white">
-                        Level
-                      </Label>
-                      <Select
-                        value={questionForm.level.toString()}
-                        onValueChange={(value) => setQuestionForm({ ...questionForm, level: Number.parseInt(value) })}
-                      >
-                        <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
-                          <SelectValue placeholder="Pilih level" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-slate-800 border-slate-600">
-                          {Array.from({ length: 12 }, (_, i) => (
-                            <SelectItem key={i + 1} value={(i + 1).toString()} className="text-white">
-                              Level {i + 1} - {i < 3 ? "Mudah" : i < 6 ? "Sedang" : i < 9 ? "Sulit" : "Sangat Sulit"}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                      <div>
+                        <Label className="text-white text-sm sm:text-base">Level</Label>
+                        <Select
+                          value={formData.level.toString()}
+                          onValueChange={(value) => setFormData({ ...formData, level: Number.parseInt(value) })}
+                        >
+                          <SelectTrigger className="bg-white/10 border-white/30 text-white">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 12 }, (_, i) => i + 1).map((level) => (
+                              <SelectItem key={level} value={level.toString()}>
+                                Level {level}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div>
-                      <Label htmlFor="question" className="text-white">
-                        Pertanyaan
-                      </Label>
-                      <Textarea
-                        id="question"
-                        placeholder="Masukkan pertanyaan..."
-                        value={questionForm.question}
-                        onChange={(e) => setQuestionForm({ ...questionForm, question: e.target.value })}
-                        rows={3}
-                        className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
-                      />
-                    </div>
+                      <div>
+                        <Label className="text-white text-sm sm:text-base">Jawaban Benar</Label>
+                        <Select
+                          value={formData.correct_answer.toString()}
+                          onValueChange={(value) =>
+                            setFormData({ ...formData, correct_answer: Number.parseInt(value) })
+                          }
+                        >
+                          <SelectTrigger className="bg-white/10 border-white/30 text-white">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {["A", "B", "C", "D"].map((letter, index) => (
+                              <SelectItem key={index} value={index.toString()}>
+                                Opsi {letter}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div>
-                      <Label className="text-white">Pilihan Jawaban</Label>
-                      <div className="space-y-3">
-                        {questionForm.options.map((option, index) => (
-                          <div key={index} className="flex items-center space-x-3">
-                            <div className="flex-1">
+                      <div className="lg:col-span-2">
+                        <Label className="text-white text-sm sm:text-base">Opsi Jawaban</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-2">
+                          {formData.options.map((option, index) => (
+                            <div key={index}>
+                              <Label className="text-purple-200 text-xs sm:text-sm">
+                                Opsi {String.fromCharCode(65 + index)}
+                              </Label>
                               <Input
-                                placeholder={`Pilihan ${String.fromCharCode(65 + index)}`}
                                 value={option}
-                                onChange={(e) => updateOption(index, e.target.value)}
-                                className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
+                                onChange={(e) => {
+                                  const newOptions = [...formData.options]
+                                  newOptions[index] = e.target.value
+                                  setFormData({ ...formData, options: newOptions })
+                                }}
+                                className="bg-white/10 border-white/30 text-white placeholder-purple-300 text-sm sm:text-base"
+                                placeholder={`Opsi ${String.fromCharCode(65 + index)}`}
                               />
                             </div>
-                            <Button
-                              type="button"
-                              variant={questionForm.correct_answer === index ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setQuestionForm({ ...questionForm, correct_answer: index })}
-                              className={
-                                questionForm.correct_answer === index
-                                  ? "bg-green-600 hover:bg-green-700"
-                                  : "border-slate-600 text-slate-300 hover:bg-slate-700"
-                              }
-                            >
-                              {questionForm.correct_answer === index ? "✓ Benar" : "Pilih"}
-                            </Button>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="lg:col-span-2">
+                        <Label htmlFor="explanation" className="text-white text-sm sm:text-base">
+                          Penjelasan (Opsional)
+                        </Label>
+                        <Textarea
+                          id="explanation"
+                          value={formData.explanation}
+                          onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
+                          className="bg-white/10 border-white/30 text-white placeholder-purple-300 text-sm sm:text-base"
+                          placeholder="Penjelasan jawaban..."
+                          rows={2}
+                        />
                       </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="explanation" className="text-white">
-                        Penjelasan (Opsional)
-                      </Label>
-                      <Textarea
-                        id="explanation"
-                        placeholder="Penjelasan jawaban yang benar..."
-                        value={questionForm.explanation}
-                        onChange={(e) => setQuestionForm({ ...questionForm, explanation: e.target.value })}
-                        rows={2}
-                        className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
-                      />
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                      <Button
+                        type="submit"
+                        className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg"
+                      >
+                        <Save className="h-4 w-4 mr-2" />
+                        {editingQuestion ? "Perbarui" : "Simpan"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={resetForm}
+                        className="flex-1 bg-white/10 border-white/30 text-white hover:bg-white/20"
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        Batal
+                      </Button>
                     </div>
-                  </div>
-
-                  <DialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsDialogOpen(false)}
-                      className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                    >
-                      Batal
-                    </Button>
-                    <Button
-                      onClick={handleSaveQuestion}
-                      disabled={saving || !questionForm.question || questionForm.options.some((opt) => !opt.trim())}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    >
-                      {saving ? (
-                        <div className="flex items-center">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                          Menyimpan...
-                        </div>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4 mr-2" />
-                          {editingQuestion ? "Update" : "Simpan"} Soal
-                        </>
-                      )}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            {/* Level Filter */}
-            <Card className="bg-white/10 backdrop-blur-md border-white/20">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <Label className="text-white text-lg">Filter Level:</Label>
-                  <Select
-                    value={selectedLevel.toString()}
-                    onValueChange={(value) => setSelectedLevel(Number.parseInt(value))}
-                  >
-                    <SelectTrigger className="w-64 bg-slate-800 border-slate-600 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-600">
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <SelectItem key={i + 1} value={(i + 1).toString()} className="text-white">
-                          Level {i + 1} ({questions.filter((q) => q.level === i + 1).length} soal)
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Questions Table */}
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
-              <CardHeader>
-                <CardTitle className="text-white text-2xl">Soal Level {selectedLevel}</CardTitle>
-                <CardDescription className="text-purple-200 text-lg">
-                  {filteredQuestions.length} soal tersedia untuk level ini
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {filteredQuestions.length === 0 ? (
-                  <div className="text-center py-12">
-                    <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4" />
-                    <p className="text-slate-300 text-lg mb-4">Belum ada soal untuk level ini</p>
-                    <Button
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                      onClick={() => {
-                        setQuestionForm({ ...questionForm, level: selectedLevel })
-                        setIsDialogOpen(true)
-                      }}
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Tambah Soal Pertama
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-slate-700">
-                          <TableHead className="text-slate-300">Pertanyaan</TableHead>
-                          <TableHead className="text-slate-300">Jawaban Benar</TableHead>
-                          <TableHead className="text-slate-300">Dibuat</TableHead>
-                          <TableHead className="text-slate-300">Aksi</TableHead>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-white/20">
+                        <TableHead className="text-purple-200 font-semibold text-xs sm:text-sm">Level</TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-xs sm:text-sm">Pertanyaan</TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-center text-xs sm:text-sm">
+                          Jawaban
+                        </TableHead>
+                        <TableHead className="text-purple-200 font-semibold text-center text-xs sm:text-sm">
+                          Aksi
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {questions.map((question) => (
+                        <TableRow key={question.id} className="border-white/10 hover:bg-white/5">
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className="border-purple-300 text-purple-300 bg-purple-500/10 text-xs"
+                            >
+                              Level {question.level}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="max-w-xs sm:max-w-md">
+                              <p className="text-white text-xs sm:text-sm truncate">{question.question}</p>
+                              <p className="text-purple-300 text-xs mt-1">
+                                {new Date(question.created_at).toLocaleDateString("id-ID")}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Badge className="bg-green-500/20 text-green-300 border-green-300/30 text-xs">
+                              {String.fromCharCode(65 + question.correct_answer)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex justify-center space-x-1 sm:space-x-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleEdit(question)}
+                                className="bg-blue-500/20 border-blue-300/30 text-blue-300 hover:bg-blue-500/30 p-1 sm:p-2"
+                              >
+                                <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleDelete(question.id)}
+                                className="bg-red-500/20 border-red-300/30 text-red-300 hover:bg-red-500/30 p-1 sm:p-2"
+                              >
+                                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
                         </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredQuestions.map((question) => (
-                          <TableRow key={question.id} className="border-slate-700">
-                            <TableCell className="max-w-md text-white">
-                              <div className="truncate" title={question.question}>
-                                {question.question}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Badge className="bg-green-600 text-white">
-                                {String.fromCharCode(65 + question.correct_answer)} -{" "}
-                                {question.options[question.correct_answer]?.substring(0, 20)}
-                                {question.options[question.correct_answer]?.length > 20 ? "..." : ""}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-slate-300">
-                              {new Date(question.created_at).toLocaleDateString("id-ID")}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex space-x-2">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleEditQuestion(question)}
-                                  className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleDeleteQuestion(question.id)}
-                                  className="border-red-600 text-red-300 hover:bg-red-700"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                )}
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Level Overview */}
-          <TabsContent value="levels" className="space-y-6">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Overview Level</h2>
-              <p className="text-purple-200 text-lg">Lihat jumlah soal di setiap level</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {questionsByLevel.map(({ level, count }) => {
-                const difficulty = level <= 3 ? "Mudah" : level <= 6 ? "Sedang" : level <= 9 ? "Sulit" : "Sangat Sulit"
-                const requiredCount = level <= 3 ? 10 : level <= 6 ? 15 : level <= 9 ? 20 : 25
-                const isComplete = count >= requiredCount
-                const difficultyColor =
-                  level <= 3
-                    ? "from-green-500 to-emerald-500"
-                    : level <= 6
-                      ? "from-yellow-500 to-orange-500"
-                      : level <= 9
-                        ? "from-orange-500 to-red-500"
-                        : "from-red-500 to-pink-500"
-
-                return (
-                  <Card
-                    key={level}
-                    className={`bg-white/10 backdrop-blur-md border-white/20 ${isComplete ? "ring-2 ring-green-500" : ""}`}
-                  >
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <CardTitle className="text-white">Level {level}</CardTitle>
-                        <Badge className={`bg-gradient-to-r ${difficultyColor} text-white border-0`}>
-                          {difficulty}
-                        </Badge>
-                      </div>
-                      <CardDescription className="text-purple-200">
-                        {count}/{requiredCount} soal
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="w-full bg-slate-700 rounded-full h-3">
-                          <div
-                            className={`h-3 rounded-full transition-all duration-300 ${
-                              isComplete
-                                ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                                : "bg-gradient-to-r from-blue-500 to-purple-500"
-                            }`}
-                            style={{ width: `${Math.min((count / requiredCount) * 100, 100)}%` }}
-                          ></div>
-                        </div>
-
-                        <Button
-                          variant="outline"
-                          className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20"
-                          onClick={() => setSelectedLevel(level)}
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          Lihat Soal ({count})
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-          </TabsContent>
-
-          {/* Statistik */}
-          <TabsContent value="stats" className="space-y-6">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Statistik</h2>
-              <p className="text-purple-200 text-lg">Ringkasan data soal dan permainan</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-300/30">
-                <CardContent className="p-8 text-center">
-                  <BookOpen className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-                  <div className="text-4xl font-bold text-white">{questions.length}</div>
-                  <div className="text-blue-200 text-lg">Total Soal</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border-green-300/30">
-                <CardContent className="p-8 text-center">
-                  <BarChart3 className="h-12 w-12 text-green-400 mx-auto mb-4" />
-                  <div className="text-4xl font-bold text-white">
-                    {questionsByLevel.filter((l) => l.count > 0).length}
-                  </div>
-                  <div className="text-green-200 text-lg">Level Aktif</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-300/30">
-                <CardContent className="p-8 text-center">
-                  <Users className="h-12 w-12 text-purple-400 mx-auto mb-4" />
-                  <div className="text-4xl font-bold text-white">{Math.round((questions.length / 12) * 100) / 100}</div>
-                  <div className="text-purple-200 text-lg">Rata-rata Soal/Level</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Level Statistics */}
+          {/* Users Tab */}
+          <TabsContent value="users">
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardHeader>
-                <CardTitle className="text-white text-2xl">Statistik per Level</CardTitle>
-                <CardDescription className="text-purple-200 text-lg">
-                  Detail jumlah soal di setiap level
+                <CardTitle className="text-white text-lg sm:text-xl">Manajemen Pengguna</CardTitle>
+                <CardDescription className="text-purple-200 text-sm sm:text-base">
+                  Fitur ini akan segera tersedia
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-slate-700">
-                        <TableHead className="text-slate-300">Level</TableHead>
-                        <TableHead className="text-slate-300">Tingkat Kesulitan</TableHead>
-                        <TableHead className="text-slate-300">Jumlah Soal</TableHead>
-                        <TableHead className="text-slate-300">Target Soal</TableHead>
-                        <TableHead className="text-slate-300">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {questionsByLevel.map(({ level, count }) => {
-                        const difficulty =
-                          level <= 3 ? "Mudah" : level <= 6 ? "Sedang" : level <= 9 ? "Sulit" : "Sangat Sulit"
-                        const requiredCount = level <= 3 ? 10 : level <= 6 ? 15 : level <= 9 ? 20 : 25
-                        const isComplete = count >= requiredCount
-
-                        return (
-                          <TableRow key={level} className="border-slate-700">
-                            <TableCell className="text-white font-medium">Level {level}</TableCell>
-                            <TableCell>
-                              <Badge variant="outline" className="border-slate-600 text-slate-300">
-                                {difficulty}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-white">{count}</TableCell>
-                            <TableCell className="text-slate-300">{requiredCount}</TableCell>
-                            <TableCell>
-                              <Badge className={isComplete ? "bg-green-600 text-white" : "bg-yellow-600 text-white"}>
-                                {isComplete ? "Lengkap" : "Perlu Soal"}
-                              </Badge>
-                            </TableCell>
-                          </TableRow>
-                        )
-                      })}
-                    </TableBody>
-                  </Table>
+                <div className="text-center py-8 sm:py-12">
+                  <Users className="h-16 w-16 sm:h-20 sm:w-20 text-purple-400 mx-auto mb-4" />
+                  <p className="text-purple-200 text-base sm:text-lg">Manajemen pengguna sedang dalam pengembangan</p>
                 </div>
               </CardContent>
             </Card>
